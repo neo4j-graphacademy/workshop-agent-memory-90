@@ -1,0 +1,12 @@
+{
+  "servers": {
+    "memory": {
+      "type": "stdio",
+      "command": "bash",
+      "args": [
+        "-lc",
+        "set -a; source \"${workspaceFolder}/.env\"; set +a; export NEO4J_USER=\"$NEO4J_USERNAME\"; export NAM_EMBEDDING=openai/text-embedding-3-small; export NAM_LLM=openai/gpt-4o-mini; uvx \"neo4j-agent-memory[mcp,openai]\" mcp serve"
+      ]
+    }
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "name": "Agent Memory Workshop",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:20-bookworm",
+  "features": {
+    "ghcr.io/devcontainers/features/python:1": {
+      "version": "3.12",
+      "installTools": false
+    },
+    "ghcr.io/devcontainers/features/github-cli:1": {}
+  },
+  "onCreateCommand": "bash .devcontainer/warm-cache.sh",
+  // portsAttributes.visibility is documented but not actually enforced by
+  // Codespaces (confirmed: github.com/orgs/community/discussions/4068).
+  // A postAttachCommand calling `gh codespace ports visibility` was tried
+  // here, but it fires at attach -- before `make start` ever runs -- so
+  // neither port is forwarded yet and has nothing to act on (confirmed live:
+  // `gh codespace ports` omitted 8000 entirely until something else touched
+  // it). The working fix lives in the generated app's Makefile instead (see
+  // configure-app.py's publish-ports target), which runs after the ports
+  // actually exist.
+  "containerEnv": {
+    "UV_CACHE_DIR": "/workspaces/.uv-cache",
+    "NPM_CONFIG_CACHE": "/workspaces/.npm-cache"
+  },
+  "remoteEnv": {
+    "PATH": "${containerEnv:HOME}/.local/bin:${containerEnv:PATH}"
+  },
+  "forwardPorts": [3000, 8000],
+  "portsAttributes": {
+    "3000": {
+      "label": "Frontend (chat + graph view)",
+      "onAutoForward": "openPreview"
+    },
+    "8000": {
+      "label": "Backend API",
+      "onAutoForward": "silent"
+    }
+  }
+}
